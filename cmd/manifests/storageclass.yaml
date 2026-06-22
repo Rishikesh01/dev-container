@@ -1,0 +1,12 @@
+# local-path-provisioner gives k0s a default StorageClass backed by node-local disk.
+# Apply the upstream provisioner first (see README), then this marks it default.
+# If you already have a StorageClass, skip this file.
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: local-path
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
+provisioner: rancher.io/local-path
+volumeBindingMode: WaitForFirstConsumer
+reclaimPolicy: Retain

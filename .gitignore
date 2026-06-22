@@ -1,0 +1,14 @@
+# compiled binary
+/devbox
+
+# backups produced at runtime
+devbox-backup-*.tar.gz
+
+# editor/runtime junk
+nvim/nvimlog
+*.swp
+
+# never commit private keys
+*_deploy
+id_*
+*.pem

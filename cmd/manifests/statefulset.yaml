@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: devbox
+  namespace: devbox
+spec:
+  serviceName: devbox
+  replicas: 1
+  selector:
+    matchLabels:
+      app: devbox
+  template:
+    metadata:
+      labels:
+        app: devbox
+    spec:
+      # Image is imported straight into k0s containerd (no registry) -> never pull.
+      containers:
+        - name: dev
+          image: devbox:latest
+          imagePullPolicy: Never
+          command: ["sleep", "infinity"]
+          tty: true
+          stdin: true
+          env:
+            - name: DEVHOME
+              value: /opt/devhome
+          volumeMounts:
+            - name: home
+              mountPath: /home/dev
+          resources:
+            requests:
+              cpu: "500m"
+              memory: 1Gi
+            limits:
+              cpu: "4"
+              memory: 8Gi
+  volumeClaimTemplates:
+    - metadata:
+        name: home
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        # storageClassName omitted -> uses the default (local-path)
+        resources:
+          requests:
+            storage: 30Gi
