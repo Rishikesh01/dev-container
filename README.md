@@ -57,6 +57,9 @@ sudo install devbox /usr/local/bin/
 | `devbox build --dir <path>` | Same, with a custom build-context dir (default `.`). |
 | `devbox deploy` | Install the local-path StorageClass if missing, then apply namespace + StatefulSet and wait for readiness. |
 | `devbox shell` | Open an interactive `bash` inside the running pod (`devbox-0`). |
+| `devbox backup` | Stream a gzipped tar of the persistent home (`/home/dev`) out to a local file. |
+| `devbox backup -o <file>` | Same, with a chosen filename (default `devbox-backup-<timestamp>.tar.gz`). |
+| `devbox restore <file>` | Restore a backup tarball back into the home (prompts before overwriting; `--force` to skip). |
 | `devbox destroy` | Delete the StatefulSet, **keep** the PVC (data safe). |
 | `devbox destroy --purge-data` | Also delete the PVC → wipes `~/home` (nvim state, Claude login, `~/work`). |
 | `devbox destroy --remove-image` | Also remove the `devbox:latest` image from k0s containerd. |
