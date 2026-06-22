@@ -40,7 +40,7 @@ spec:
         name: home
       spec:
         accessModes: ["ReadWriteOnce"]
-        # storageClassName omitted -> uses the default (local-path)
+        storageClassName: devbox-local-path
         resources:
           requests:
             storage: 30Gi

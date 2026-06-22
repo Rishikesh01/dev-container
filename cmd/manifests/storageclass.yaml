@@ -1,12 +1,11 @@
-# local-path-provisioner gives k0s a default StorageClass backed by node-local disk.
-# Apply the upstream provisioner first (see README), then this marks it default.
-# If you already have a StorageClass, skip this file.
+# Dedicated StorageClass for the devbox, backed by local-path-provisioner.
+# It has its own name (NOT the upstream "local-path") so we never collide with or
+# try to mutate the immutable reclaimPolicy of the provisioner's default class.
+# reclaimPolicy: Retain -> deleting the PVC won't auto-erase the data on disk.
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: local-path
-  annotations:
-    storageclass.kubernetes.io/is-default-class: "true"
+  name: devbox-local-path
 provisioner: rancher.io/local-path
 volumeBindingMode: WaitForFirstConsumer
 reclaimPolicy: Retain
