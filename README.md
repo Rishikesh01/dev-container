@@ -1,9 +1,15 @@
 # devbox — AI project dev container on k0s
 
 A persistent dev environment running as a pod on your single-node k0s cluster
-(`homeserver`). Built on **Arch Linux**, with **Go**, **Rust**, **Neovim + your
-AstroNvim config (plugins pre-installed)**, and **Claude Code** — all installed
-natively from the Arch repos at their latest versions.
+(`homeserver`). Built on **Arch Linux**, with **Go**, **Rust**, **Node** (native
+from the Arch repos, latest), **Neovim + your AstroNvim config (plugins
+pre-installed)**, and **Claude Code**.
+
+Neovim is **pinned** to a specific upstream release (`NVIM_VERSION` build arg,
+default `0.12.3`) rather than installed from pacman — Arch is rolling and drops
+old versions, so pacman would otherwise move nvim ahead of the AstroNvim config /
+`lazy-lock.json` it was tested against. Bump it deliberately (and re-test) with
+`docker build --build-arg NVIM_VERSION=0.13.0 ...` or by editing the Dockerfile.
 
 Managed by a single self-contained Go binary (`devbox`) with Cobra, so you get
 shell autocompletion for free.
@@ -122,8 +128,9 @@ the node stays on disk until you remove it manually.
   Note: an existing PVC keeps its seeded home, so config changes won't auto-apply
   to an already-seeded volume — either edit config live in the pod, or
   `devbox destroy --purge-data` to re-seed from the image on next deploy.
-- Arch is rolling, so each rebuild pulls the latest toolchains. Pin packages in
-  the Dockerfile if you ever need reproducibility.
+- Arch is rolling, so each rebuild pulls the latest Go/Rust/Node. Neovim is the
+  exception — it's pinned (see top). Pin other packages in the Dockerfile too if
+  you ever need full reproducibility.
 
 ## Notes
 

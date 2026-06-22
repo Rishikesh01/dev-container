@@ -1,18 +1,30 @@
 # Dev container for AI project work: Go + Rust + Neovim (AstroNvim) + Claude Code
-# Arch base: everything installs natively from pacman at the latest version,
-# so there are no manual tarball downloads / symlinks to maintain.
+# Arch base: toolchains (go/rust/node) come from pacman at the latest version.
+# Neovim is the exception -> see below.
 FROM archlinux:latest
 
-# ---- system packages (toolchains + everything AstroNvim wants) ----
-# go, rust, neovim, nodejs/npm all come straight from the repos at latest.
+# Neovim is PINNED to a specific upstream release, NOT installed from pacman.
+# Arch is rolling and drops old versions, so pacman would silently move nvim to
+# whatever is newest on each rebuild -- which can outrun the AstroNvim config /
+# lazy-lock.json that were tested against this version. Pin it here, bump on
+# purpose (and re-test the config) when you want a newer nvim.
+ARG NVIM_VERSION=0.12.3
+
+# ---- system packages (toolchains + everything AstroNvim wants; NO neovim) ----
 RUN pacman -Syu --noconfirm --needed \
         base-devel git curl wget openssh \
         go rust \
-        neovim \
         nodejs npm \
         ripgrep fd fzf unzip tar which sudo less procps-ng tmux \
         lazygit \
     && pacman -Scc --noconfirm
+
+# ---- Neovim (pinned upstream release, decoupled from Arch rolling) ----
+RUN curl -fsSL "https://github.com/neovim/neovim/releases/download/v${NVIM_VERSION}/nvim-linux-x86_64.tar.gz" -o /tmp/nvim.tgz \
+    && tar -C /opt -xzf /tmp/nvim.tgz \
+    && ln -s /opt/nvim-linux-x86_64/bin/nvim /usr/local/bin/nvim \
+    && rm /tmp/nvim.tgz \
+    && nvim --version | head -1
 
 ENV GOPATH=/home/dev/go \
     GOTOOLCHAIN=local
