@@ -1,4 +1,4 @@
-# devbox — AI project dev container on k0s
+# devbox
 
 A persistent dev environment running as a pod on your single-node k0s cluster
 (`homeserver`). Built on **Arch Linux**, with **Go**, **Rust**, **Node** (native
