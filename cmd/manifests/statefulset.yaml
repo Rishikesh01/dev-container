@@ -19,7 +19,9 @@ spec:
         - name: dev
           image: devbox:latest
           imagePullPolicy: Never
-          command: ["sleep", "infinity"]
+          # No command/args here on purpose: that would override the image's
+          # ENTRYPOINT (entrypoint.sh, which seeds the persistent home) and skip
+          # seeding. The image already runs `entrypoint.sh -> sleep infinity`.
           tty: true
           stdin: true
           env:
